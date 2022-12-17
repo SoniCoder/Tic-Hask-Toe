@@ -57,7 +57,7 @@ _TIED_BOARD_ = [
 -- Q#06
 
 indexRowStrings :: [String] -> [(Char, String)]
-indexRowStrings ls = zip ['A' ..] ls 
+indexRowStrings ls = zip ['A' ..] ls
 
 -- Q#07
 
@@ -68,12 +68,25 @@ formatLine ls = concat [_SEP_, intercalate _SEP_ ls, _SEP_]
 
 -- Q#08
 
-isMoveInBounds = undefined
+isMoveInBounds :: Move -> Bool
+isMoveInBounds m = all (\x -> x >= 0 && x <= _SIZE_ - 1) m
 
 -- Q#09
 
-stringToMove = undefined
+stringToMove :: String -> Move
+stringToMove (x:[y]) = (convertRowIndex x ,readDigit y)
+stringToMove _ = _INVALID_MOVE_
 
 -- Q#10
 
-replaceSquareInRow = undefined
+replaceSquareInRow :: Player -> Int -> Row -> Row
+replaceSquareInRow p c [] = []
+replaceSquareInRow p c r
+    | c >= 0 && c <= _SIZE_ - 1 =
+        let splitRow = splitAt c r
+            (r1, _ : r2) = splitRow
+        in concat [r1, [p], r2]
+    | otherwise = r
+
+rsX = replaceSquareInRow X
+rsO = replaceSquareInRow O
