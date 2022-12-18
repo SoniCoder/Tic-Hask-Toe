@@ -75,16 +75,34 @@ getAllLines b = concat [b, transpose b, [getDiag1 b], [getDiag2 b]]
 
 -- Q#07
 
-putSquare = undefined
+putSquare :: Player -> Board -> Move -> Board
+putSquare _ [] _ = []
+putSquare p (r: rs) (0, y) = replaceSquareInRow p y r : rs
+putSquare p (r: rs) (x, y) = r : putSquare p rs (x-1, y) 
 
 -- Q#08
 
-prependRowIndices = undefined
+prependRowIndices :: [String] -> [String]
+prependRowIndices ss =
+    postprocess (indexRowStrings ss)
+    where postprocess [] = []
+          postprocess ((c, s) : css) =  (c:s) : postprocess css
 
 -- Q#09
 
-isWinningLine = undefined
+isWinningLine :: Player -> Line -> Bool
+isWinningLine _ [] = False
+isWinningLine p l =
+    go l False
+    where go [] acc = acc
+          go (s : ss) acc = s == p && go ss True
+
 
 -- Q#10
 
-isValidMove = undefined
+isValidMove :: Board -> Move -> Bool
+isValidMove b m = isMoveInBounds m && isSquareEmpty b m 0
+        where isSquareEmpty (r : rs) (x, y) c
+                | c == x = isColEmpty r y
+                | otherwise = isSquareEmpty rs m (c+1)
+              isSquareEmpty [] _ _ = False
