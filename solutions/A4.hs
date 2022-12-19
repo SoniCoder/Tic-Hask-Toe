@@ -50,23 +50,36 @@ isWinningLine_ p ss = null (filter (/= p) ss)
 
 -- Q#07
 
-isWinningLine = undefined
+isWinningLine :: Player -> Line -> Bool
+isWinningLine p [] = False 
+isWinningLine p l = foldr (\x acc -> x == p && acc) True l
 
 -- Q#08
 
-hasWon = undefined
+hasWon :: Player -> Board -> Bool
+hasWon p b = foldr (\l acc -> acc || isWinningLine p l) False (getAllLines b) 
 
 -- Q#09
 
-getGameState = undefined
+getGameState :: Board -> GameState
+getGameState b
+    | hasWon X b = W_X
+    | hasWon O b = W_O
+    | isTied b = T
+    | otherwise = IP
 
 
-playMove = undefined
+playMove :: Player -> Board -> Move -> (GameState, Board)
+playMove p b m = (getGameState nb, nb)
+  where nb = putSquare p b m 
+
 
 -- Q#10
 
-prependRowIndices = undefined
+prependRowIndices :: [String] -> [String]
+prependRowIndices ss = zipWith (:) ['A'..] ss
 
 -- Q#11
 
-formatBoard = undefined
+formatBoard :: Board -> String
+formatBoard b = unlines $ _HEADER_ : (prependRowIndices . formatRows) b
