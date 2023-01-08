@@ -7,4 +7,6 @@ import A4
 import A5
 
 main :: IO ()
-main = putStrLn "Welcome to Part I of EMURGO Academy's Haskell course!"
+main = do
+    putStrLn "Welcome to Tic-Tac-Toe!"
+    play _EMPTY_BOARD_ =<< firstPlayer
