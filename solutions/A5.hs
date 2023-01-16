@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use lambda-case" #-}
 {-# HLINT ignore "Redundant <&>" #-}
+{-# HLINT ignore "Use <$>" #-}
 module A5 where
 
 import A1
@@ -60,16 +61,37 @@ play b p = do
 
 -- Q#07
 
-printLogoDo = undefined
+printLogoDo :: IO ()
+printLogoDo = do
+    f <- readFile _LOGO_PATH_ 
+    putStrLn f
 
 -- Q#08
 
-firstPlayerDo = undefined
+firstPlayerDo :: IO Player
+firstPlayerDo = do
+    b <- _RANDOM_BOOL_
+    return $ getFirstPlayer b
 
 -- Q#09
 
-getMoveDo = undefined
+getMoveDo :: Board -> IO Move
+getMoveDo b = do
+    m <- getLine <&> stringToMove
+    if isValidMove b m
+        then return m
+        else do 
+            putStrLn "Invalid move! Try again"
+            getMoveDo b
 
 -- Q#10
 
-playDo = undefined
+playDo :: Board -> Player -> IO ()
+playDo b p = do
+    printLogo
+    printBoard b
+    putStrLn $ promptPlayer p
+    m <- getMove b
+    case playMove p b m of
+        (IP, b') -> playDo b' (switchPlayer p)
+        (gs, b') -> printBoard b' >> putStrLn (showGameState gs)

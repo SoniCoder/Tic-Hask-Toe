@@ -9,4 +9,4 @@ import A5
 main :: IO ()
 main = do
     putStrLn "Welcome to Tic-Tac-Toe!"
-    play _EMPTY_BOARD_ =<< firstPlayer
+    playDo _EMPTY_BOARD_ =<< firstPlayer
